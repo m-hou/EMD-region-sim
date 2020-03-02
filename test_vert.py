@@ -52,11 +52,12 @@ def apply_move_to_histogram(histogram, move_index, move_direction, mass_to_move)
 
 def point_within_affine_V(V, P):
     c = np.repeat(1, len(V))
-    A_eq = np.transpose(np.array([np.array(v + [1]) for v in V]))
+    A_eq = np.transpose(np.array([np.array(v) for v in V]))
+    b_eq = np.array(P)
+    A_ub = np.transpose(np.array([np.array([1]) for _ in V]))
+    b_ub = np.array([1])
 
-    b_eq = np.array(P + [1])
-
-    solution = linprog(c, A_eq=A_eq, b_eq=b_eq)
+    solution = linprog(c, A_ub, b_ub, A_eq, b_eq)
     return solution.success
 
 def remove_redundent_points(V):
